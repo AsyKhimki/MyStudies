@@ -2,11 +2,14 @@
 
 <h3> List of references <h3>
 
-  1. [<small>Gitlab lab materials</small>](https://handbook.gitlab.com/handbook/customer-success/professional-services-engineering/education-services/gitlabcicdhandson/) 
-  2. [List of pre-defined gitlab variables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
-  3. [Deep Dive into Review Apps](https://www.youtube.com/watch?v=HblSiPFamDI)
+  1.[Gitlab syntax reference](https://docs.gitlab.com/ee/ci/yaml/)
+  2. [<small>Gitlab lab materials</small>](https://handbook.gitlab.com/handbook/customer-success/professional-services-engineering/education-services/gitlabcicdhandson/) 
+  3. [List of pre-defined gitlab variables](https://docs.gitlab.com/ee/ci/variables/predefined_variables.html)
+  4. [Deep Dive into Review Apps](https://www.youtube.com/watch?v=HblSiPFamDI)
+  5. [List of Gitlab templates](https://gitlab.com/gitlab-org/gitlab-foss/tree/master/lib/gitlab/ci/templates) (see folder **Jobs**)
+  6. [Gitlab variables](https://docs.gitlab.com/ee/ci/variables/index.html#define-a-cicd-variable-in-the-ui)
      
-<h2> Case Studies </h2>
+<h2> Use Cases </h2>
 
 | Description | Code | Comments |
 | :----- | :------ | :---- |
@@ -24,6 +27,7 @@
 |Job templates|||
 |The job will not run if the pipeline is triggered on the main branch or by a git tag|<img width="400" alt="Screenshot 2024-10-02 at 23 52 30" src="https://github.com/user-attachments/assets/2e4a2c2a-68b1-4044-b3c8-e614fbb257dc">||
 |Create a new tag|- click on Code > Tags <br> - Click on the New tag button. <br> - Type in v1.0 into the Tag name section. <br> - Click the Create tag button||
-
+|Create a variable|||
+|Pass a variable to donwstream pipeline|||
 
 
