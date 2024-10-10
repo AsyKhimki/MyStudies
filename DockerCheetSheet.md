@@ -80,7 +80,7 @@ Run a docker image on a repote host
 docker -H=10.123.2.1:<port> run <image name>
 ```
 
-<h3> Running commands in the container <h3>
+<h3> Running commands in the container </h3>
 
 Execute a command in a running container
 ```
