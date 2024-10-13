@@ -72,12 +72,12 @@
 | Nr             | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | Reference |
 | :------| :------ |:---- | :----------------|
 6.1| Define what the XX driver is?| MongoDB drivers connect our application to our database by using a connection string. | - [Mongo Drivers](https://www.mongodb.com/docs/drivers/)|
-6.2  |Define how the XX application connects/uses the XXX driver?|
+6.2  |Define how the XX application connects/uses the XXX driver?| | - [PyMongo reference](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) </br> - [PyMongo connect](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/connect/#std-label-pymongo-connect)|
 6.3 |Define the components of the URI string used by MongoClient to connect the driver to the database. |
 | 6.4 |Identify what connection pooling is in terms of the driver and what advantages itoffers.| |
 |6.5 |Identify the correct syntax for the XX driver to insert one document and to insert many documents.|
-|6.6 |Identify the correct syntax for the XX driver to update one document and to update many documents. | `db.collection.update_one(<filter>, <update>)`|
+|6.6 |Identify the correct syntax for the XX driver to update one document and to update many documents. | `db.collection.update_one(<filter>, <update>)` </br> `db.collection.update_many(<filter>, <update>)`| - [Write](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/write-operations/#std-label-pymongo-write)|
 |6.7 |Identify the correct syntax for the XX driver to delete one document and to delete many documents. |
-|6.8 |Identify the correct syntax for the XX driver to find many documents and to find one document.| `xx.find_one()`</br> `xx.find()`|
+|6.8 |Identify the correct syntax for the XX driver to find many documents and to find one document.| `xx.find_one({ "<field name>" : "<value>" })`</br> `xx.find()`| - [Find](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/read/#std-label-pymongo-read)| 
 |6.9 |Identify the correct syntax for the XX driver to create an aggregation pipeline.| `pipeline = [<stage 1>, <stage 2>]; db.collection.aggregate(pipeline)`|
 |6.10| Identify the different syntax for the XX driver when using the MongoDB Query Language (MQL) and when using the Aggregation Framework.|
