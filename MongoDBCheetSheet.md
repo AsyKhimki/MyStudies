@@ -1,13 +1,5 @@
 <h1> MongoDB Cheet Sheet</h1>
 
-<h2> Miscellaneous Use Cases </h2>
-
-| Query            | Details| Reference |
-| :---------------- | :------ | ----: |
-| `db.help()` | get help on general MongoDB commands ||
-|`{ <field>: { $regex: /pattern/, $options: '<options>' } }` </br> | Regex expression search| [RegEx](https://www.mongodb.com/docs/manual/reference/operator/query/regex/)|
-|**Python** </br> `client = MongoClient(<uri>);`</br>`db = client['my_database'];`</br>`collections = db.list_collection_names()`|List collections in database||
-
 <h2> Associate Developer Exam Study Notes </h2>
 
 <h4> Reference </h4>
@@ -86,3 +78,12 @@
 |6.8 |Identify the correct syntax for the XX driver to find many documents and to find one document.| `xx.find_one({ "<field name>" : "<value>" })`</br> `xx.find()`| - [Find](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/read/#std-label-pymongo-read)| 
 |6.9 |Identify the correct syntax for the XX driver to create an aggregation pipeline.| `pipeline = [<stage 1>, <stage 2>]; db.collection.aggregate(pipeline)`|
 |6.10| Identify the different syntax for the XX driver when using the MongoDB Query Language (MQL) and when using the Aggregation Framework.|
+
+<h2> Miscellaneous Use Cases </h2>
+
+| Query            | Details| Reference |
+| :---------------- | :------ | ----: |
+| `db.help()` | get help on general MongoDB commands ||
+|`{ <field>: { $regex: /pattern/, $options: '<options>' } }` </br> | Regex expression search| [RegEx](https://www.mongodb.com/docs/manual/reference/operator/query/regex/)|
+|**Python** </br> `client = MongoClient(<uri>);`</br>`db = client['my_database'];`</br>`collections = db.list_collection_names()`|List collections in database||
+
