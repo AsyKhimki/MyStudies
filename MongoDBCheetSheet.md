@@ -1,5 +1,7 @@
 <h1> MongoDB Cheet Sheet</h1>
 
+<img width="1000" alt="Screenshot 2024-10-14 at 22 40 40" src="https://github.com/user-attachments/assets/b8cece98-84f9-4a10-9554-7cf8ca731f1d">
+
 <h2> Associate Developer Exam Study Notes </h2>
 
 <h4> Reference </h4>
@@ -15,9 +17,6 @@
 
 
 <h4> 2. CRUD </h4>
-
-<img width="1000" alt="Screenshot 2024-10-14 at 22 40 40" src="https://github.com/user-attachments/assets/b8cece98-84f9-4a10-9554-7cf8ca731f1d">
-
 
 | Nr             | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | Reference |
 | :------| :------ |:---- | :----------------|
