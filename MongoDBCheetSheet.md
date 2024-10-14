@@ -1,10 +1,12 @@
 <h1> MongoDB Cheet Sheet</h1>
 
-<h2> CRUD operations</h2>
+<h2> Miscellaneous Use Cases </h2>
 
 | Query            | Details| Reference |
-| :---------------- | :------: | ----: |
+| :---------------- | :------ | ----: |
 | `db.help()` | get help on general MongoDB commands ||
+|`{ <field>: { $regex: /pattern/, $options: '<options>' } }` </br> | Regex expression search| [RegEx](https://www.mongodb.com/docs/manual/reference/operator/query/regex/)|
+|**Python** </br> `client = MongoClient(<uri>);`</br>`db = client['my_database'];`</br>`collections = db.list_collection_names()`|List collections in database||
 
 <h2> Associate Developer Exam Study Notes </h2>
 
@@ -18,15 +20,18 @@
 | :------| :------ |:---- | :----------------|
 | 1 | Identify the set of value types MongoDB BSON supports | - Extension of JSON </br> - Optimized for storage, retrieval, and transmission across the wire </br> -  More secure than plaintext JSON </br> - Supports more data types than JSON </br> **Example** </br> - String </br> - `int32, int64`</br> | [BSON Types](https://www.mongodb.com/docs/manual/reference/bson-types/)|
 | 2 | Given three documents that are of different shape, identify which can co-exist in the same collection | **Technical constraints** </br> - Documents Exceeding Size Limits (16 MB) </br>- Non-Unique `_id` Values </br>- Schema Validation Rules (if defined) </br>- Documents with Circular References </br>- Invalid Field Names ($, .) </br>- Field Values of Unsupported BSON Types (i.e functions) </br>- Documents with Reserved Field Names in System Collections
-|
+
 
 <h4> 2. CRUD </h4>
 
+<img width="1000" alt="Screenshot 2024-10-14 at 22 40 40" src="https://github.com/user-attachments/assets/b8cece98-84f9-4a10-9554-7cf8ca731f1d">
+
+
 | Nr             | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | Reference |
 | :------| :------ |:---- | :----------------|
-2.1 |Given a scenario with a type of structured document that needs to be inserted into a database, identify properly and improperly formed insert commands.
+2.1 |Given a scenario with a type of structured document that needs to be inserted into a database, identify properly and improperly formed insert commands. ||- [Insert One](https://www.mongodb.com/docs/manual/reference/method/db.collection.insertOne) /</br> - [Insert Many](https://www.mongodb.com/docs/manual/reference/method/db.collection.insertMany/)|
 2.2 |Given an update scenario where an entire updated document (no update operators used) is provided, identify the output and how the database changed state.
-2.3 |Given an update scenario where $set is used, identify the output and how the database changed state. |- `$set` adds or modifies fields in the pipeline </br> - `db.col.updateOne({<filter>}, {<update>}, {options})` </br> -`{ $set: { <field1>: <value1>, ... } }` </br> - `db.products.updateOne({ _id: 100 }, { $set: { "details.make": "Kustom Kidz" }  })` </br> - updates the value second element (array index of 1) in the tags field `"tags.1"` </br> - the rating field in the first element (array index of 0) of the ratings array `"ratings.0.rating"` | - [$set](https://www.mongodb.com/docs/manual/reference/operator/update/set/?_ga=2.56665699.810066485.1665291537-836515500.1666025886)| 
+2.3 |Given an update scenario where $set is used, identify the output and how the database changed state. |- `$set` adds or modifies fields in the pipeline </br> - `db.col.updateOne({<filter>}, {<update>}, {options})` </br> -`{ $set: { <field1>: <value1>, ... } }` </br> - `db.products.updateOne({ _id: 100 }, { $set: { "details.make": "Kustom Kidz" }  })` </br> - updates the value second element (array index of 1) in the tags field `"tags.1"` </br> - the rating field in the first element (array index of 0) of the ratings array `"ratings.0.rating"` | - [$set](https://www.mongodb.com/docs/manual/reference/operator/update/set/?_ga=2.56665699.810066485.1665291537-836515500.1666025886) </br> -[updateMany](https://www.mongodb.com/docs/manual/reference/method/db.collection.updateMany/) </br> - [Update operator expressions](https://www.mongodb.com/docs/manual/reference/method/db.collection.updateOne/#std-label-updateOne-behavior-update-expressions)| 
 2.4 |Given a scenario about updating a document and information about where it should be inserted if it does not exist, identify the upsert command that should be used.
 2.5 |Given a scenario where multiple documents need to be updated, identify the correct update expression.
 2.6 |Given a findAndModify scenario where another operation is run concurrently, identify the output and how the database changed state.|Updates and returns a single document </br> `db.collection.findAndModify({ </br>query: <document>, sort: <document>,remove: <boolean>, update: <document or aggregation pipeline>});`|- [findAndModify](https://www.mongodb.com/docs/manual/reference/method/db.collection.findAndModify/?_ga=2.123127490.810066485.1665291537-836515500.1666025886)|
@@ -43,9 +48,9 @@
 2.17  | Identify the expressions used to count the number of documents matching a query. |`db.col.countDocuments({query})`|
 2.18  | Given an indexing scenario, identify the correct command for defining a search index.
 2.19  | Given a scenario, identify the correct search query.
-2.20  | Given an aggregation expression using $match, $group, identify the correct output.
-2.21  | Given an aggregation expression using $lookup, identify the correct output.
-2.22  | Given an aggregation expression using $out, identify the correct output. | Writes the documents that are returned by an aggregation pipeline into a collection - If collection exists, `Sout` replaces the existing collection with new data </br> - Creates a new collection if it does not already exist </br> `$out: { db: "<db>", coll: "<new_collecgtion>" }`|
+2.20  | Given an aggregation expression using `$match`, `$group`, identify the correct output. |`{$group:`</br>`{ _id: <expression>, // Group key` </br> `<field1>: { <accumulator1> : <expression1> },`</br> `} }`|- [Group](https://www.mongodb.com/docs/manual/reference/operator/aggregation/group/)|
+2.21  | Given an aggregation expression using `$lookup`, identify the correct output.
+2.22  | Given an aggregation expression using `$out`, identify the correct output. | Writes the documents that are returned by an aggregation pipeline into a collection - If collection exists, `Sout` replaces the existing collection with new data </br> - Creates a new collection if it does not already exist </br> `$out: { db: "<db>", coll: "<new_collecgtion>" }`|
 
 <h4> 3. Indexes </h4> 
 
@@ -71,13 +76,13 @@
 
 | Nr             | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | Reference |
 | :------| :------ |:---- | :----------------|
-6.1| Define what the XX driver is?| MongoDB drivers connect our application to our database by using a connection string. | - [Mongo Drivers](https://www.mongodb.com/docs/drivers/)|
-6.2  |Define how the XX application connects/uses the XXX driver?| | - [PyMongo reference](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) </br> - [PyMongo connect](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/connect/#std-label-pymongo-connect)|
-6.3 |Define the components of the URI string used by MongoClient to connect the driver to the database. |
-| 6.4 |Identify what connection pooling is in terms of the driver and what advantages itoffers.| |
-|6.5 |Identify the correct syntax for the XX driver to insert one document and to insert many documents.|
+| 6.1| Define what the XX driver is?| MongoDB drivers connect our application to our database by using a connection string. | - [Mongo Drivers](https://www.mongodb.com/docs/drivers/)| 
+| 6.2  |Define how the XX application connects/uses the XXX driver?| **Python**</br>`mongodb://<db_username>:<db_password>@<hostname>:<port>` </br>**SRV Connection Format** </br> `mongodb+srv://[username:password@]host[/[defaultauthdb][?options]]` </br> - `+srv` indicates to the client that the hostname that follows corresponds to a DNS SRV record. </br>  - The driver or mongosh will then query the DNS for the record to determine which hosts are running the mongod or mongos instances| - [PyMongo reference](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/) </br> - [PyMongo connect](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/connect/#std-label-pymongo-connect) </br> -[Connection String](https://www.mongodb.com/docs/manual/reference/connection-string/#std-label-connections-dns-seedlist)|
+| 6.3 |Define the components of the URI string used by MongoClient to connect the driver to the database. |
+| 6.4 |Identify what connection pooling is in terms of the driver and what advantages it offers.| - a technique used by the MongoDB driver to manage multiple connections to the database efficiently. Instead of opening and closing a new connection every time a client interacts with the database, the driver maintains a pool of open, reusable connections </br> **Advantages of Connection Pooling** </br> - Reduced Overhead </br> - Efficient Resource Utilization </br> - Increased Throughput: Concurrent Operations </br> - Increased Throughput: Minimizing Blocking  </br> -  Scalability: Handling Multiple Requests </br> -  Scalability: Maximizing Database Resources </br> - Reduced Latency: Faster Query Execution </br> -  Configurable </br> `client = MongoClient("mongodb://localhost:27017", maxPoolSize=50, minPoolSize=10 )`|
+|6.5 |Identify the correct syntax for the XX driver to insert one document and to insert many documents.| `db.test.insert_one(document, bypass_document_validation=False, session=None, comment=None)` </br> `db.test.insert_one({'x': 1})` </br> `insert_many(documents, ordered=True, ...)` </br> `db.test.insert_many([{'x': i} for i in range(2)])`| - [Insert](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/write/insert/)|
 |6.6 |Identify the correct syntax for the XX driver to update one document and to update many documents. | `db.collection.update_one(<filter>, <update>)` </br> `db.collection.update_many(<filter>, <update>)`| - [Write](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/write-operations/#std-label-pymongo-write)|
-|6.7 |Identify the correct syntax for the XX driver to delete one document and to delete many documents. |
+|6.7 |Identify the correct syntax for the XX driver to delete one document and to delete many documents. | - `delete_one(<query_filter>)` - delete the first document that matches the search criteria </br> - `delete_many(<query_filter>)` - deletes all documents that match the search criteria | - [Delete](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/write/delete/)|
 |6.8 |Identify the correct syntax for the XX driver to find many documents and to find one document.| `xx.find_one({ "<field name>" : "<value>" })`</br> `xx.find()`| - [Find](https://www.mongodb.com/docs/languages/python/pymongo-driver/current/read/#std-label-pymongo-read)| 
 |6.9 |Identify the correct syntax for the XX driver to create an aggregation pipeline.| `pipeline = [<stage 1>, <stage 2>]; db.collection.aggregate(pipeline)`|
 |6.10| Identify the different syntax for the XX driver when using the MongoDB Query Language (MQL) and when using the Aggregation Framework.|
