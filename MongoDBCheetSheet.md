@@ -12,7 +12,7 @@
 
 | Nr             | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;  | Reference |
 | :------| :------ |:---- | :----------------|
-| 1 | Identify the set of value types MongoDB BSON supports | - Extension of JSON </br> - Optimized for storage, retrieval, and transmission across the wire </br> -  More secure than plaintext JSON </br> - Supports more data types than JSON </br> **Example** </br> - String </br> - `int32, int64`</br> | [BSON Types](https://www.mongodb.com/docs/manual/reference/bson-types/)|
+| 1 | Identify the set of value types MongoDB BSON supports | - Extension of JSON </br> - Optimized for storage, retrieval, and transmission across the wire </br> -  More secure than plaintext JSON </br> - Supports more data types than JSON </br> **Example** </br> - String </br> - `int32, int64`</br> - ... </br> **Examples of unsupported values**</br> - `undefined` values </br> - JavaScript functions </br> - `NaN` and `Infinity` </br> - Dates outside supported range  </br> - RegExp objects  </br> - Circular references | [BSON Types](https://www.mongodb.com/docs/manual/reference/bson-types/)|
 | 2 | Given three documents that are of different shape, identify which can co-exist in the same collection | **Technical constraints** </br> - Documents Exceeding Size Limits (16 MB) </br>- Non-Unique `_id` Values </br>- Schema Validation Rules (if defined) </br>- Documents with Circular References </br>- Invalid Field Names (`$`, `.`) </br>- Field Values of Unsupported BSON Types (i.e functions) </br>- Documents with Reserved Field Names in System Collections
 
 
