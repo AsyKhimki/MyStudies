@@ -3,7 +3,7 @@
 <h2> Important Reference</h2>
 
 1. [Apache-Airflow-Fundamentals-Study-Guide](https://www.astronomer.io/uploads/Apache-Airflow-Fundamentals-Study-Guide.pdf)
-2. 
+2. [Sample exam questions](https://medium.com/@ansam.yousry/test-your-knowledge-70-questions-on-apache-airflow-fundamentals-8bcb9dda6127)
 
 <h2> Curriculum </h2>
 
@@ -29,17 +29,25 @@
 |2.14| Identify optional and non-optional DAG parameters. | [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/)| 
 |2.15| Identify what each of the task lifecycle stages does| <img width="500" alt="Screenshot 2025-02-16 at 22 51 17" src="https://github.com/user-attachments/assets/79c2baca-c752-4767-9a88-e53265cd2a85" />
 |2.16| Identify valid ways to define a DAG in Airflow.| - TaskFlow API </br> - Traditional syntax </br> NB: can be mixed | 
+|| Miscellaneous| - Airflow does not provide versioning features </br> - Airflow can be used for data orchestration in multi-cloud environments. </br> - Airflow is primarily designed for batch processing | 
 
 
 <h3> Topic 3: Dependencies </h3>
 
+**Reference**
+1. [Notes on DAG dependencies](https://github.com/ovimihai/airflow-cert-dag-authoring/blob/main/notes/5_dag_dependencies.md)
+2. [Managing Dependencies](https://www.astronomer.io/docs/learn/managing-dependencies/?tab=taskflow#dependencies-in-dynamic-task-mapping)
+3. [Cross-dag-dependencies](https://www.astronomer.io/docs/learn/cross-dag-dependencies/)
+4. [Trigger Rules](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/dags.html#trigger-rules)
+
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
-|3.1| Identify the purpose of task-level dependencies in Airflow|| 
-|3.2| Identify where DAG dependencies are set up in Airflow|| 
+|3.1| Identify the purpose of task-level dependencies in Airflow|- **Upstream task:** A task that must reach a specified state before a dependent task can run. </br> - **Downstream task:** A dependent task that cannot run until an upstream task reaches a specified state. </br></br> **Miscellaneous**</br> - the tasks that are dependent on the output of other tasks through xcom variables require the preceding task to execute successfully first.</br></br>**Dynamic Task Mapping**</br> - DAGs that dynamically generate parallel tasks at runtime </br> - allows to create tasks based on the current runtime environment without having to change the DAG code </br> MapReduce model: DAG can create an arbitrary number of parallel tasks at runtime based on some input parameter (the map), and then if needed, have a single task downstream of your parallel mapped tasks that depends on their output (the reduce) </br> - can create dynamic tasks only if Airflow knows the parameters beforehand</br> - can't </br> - create tasks pased on other tasks output </br> - can create tasks based on a dictionary or a variable or even on some connection in the database</br></br> **Trigger Rules**</br> - `all_success: (default)` The task runs only when all upstream tasks have succeeded. </br> - `all_done`: The task runs once all upstream tasks are done with their execution (either succeeded or failed). </br> - `none_failed_min_one_success`: The task runs only when all upstream tasks have not failed or upstream_failed, and at least one upstream task has succeeded. </br></br> task-level dependencies define the execution order and relationships between tasks in a Directed Acyclic Graph (DAG). Their primary purposes include:</br> - **Ensuring Correct Execution Order**:Dependencies control when a task should run relative to others, ensuring that prerequisites are completed before execution.</br> - **Data Flow Management**: Dependencies help manage how data moves between tasks, ensuring that output from one task is available before the next task starts.</br> - **Handling Failures and Retries**: By enforcing dependencies, Airflow can handle failures more effectively, allowing downstream tasks to wait until upstream tasks succeed.</br> - **Parallelism and Concurrency Optimization**: Dependencies allow independent tasks to run in parallel, improving DAG execution efficiency.</br> - **Managing Conditional and Dynamic Workflows**: Airflow supports conditional branching and dynamic DAG generation using dependencies, enabling complex workflows.| 
+|3.2| Identify where DAG dependencies are set up in Airflow| `t0.set_downstream(t1)`</br>`t1.set_upstream(t0)`</br>`t0 >> t1` </br>`t1 << t0`</br><img width="271" alt="Screenshot 2025-02-18 at 00 54 18" src="https://github.com/user-attachments/assets/a64889c8-fba9-4420-8215-72cb4aa42f24" /> </br></br>**Dependency functions**</br> - utilities that let you set dependencies between several tasks or lists of tasks </br> - To set parallel dependencies between tasks and lists of tasks of the same length, use the `chain()`  <img width="454" alt="Screenshot 2025-02-18 at 00 57 44" src="https://github.com/user-attachments/assets/ff45ae6a-ae24-4c39-b775-edf13400216f" /> <img width="775" alt="Screenshot 2025-02-18 at 00 58 23" src="https://github.com/user-attachments/assets/3402c447-5b2d-4edf-bf8b-70142c57c9dc" /> - To set interconnected dependencies between tasks and lists of tasks: `chain_linear()`<img width="798" alt="Screenshot 2025-02-18 at 01 00 29" src="https://github.com/user-attachments/assets/b8dc93f6-8e24-448f-85e5-29d5d964e296" /> </br> - Dependencies for dynamically mapped tasks can be set in the same way as regular tasks. </br> - The dependencies between the task group and the start and end tasks are set within the DAG's context `(t0 >> tg1() >> t3)`|
 |3.3| Compare and contrast DAG task dependency relationships for equivalency|| 
 |3.4| Match DAG task dependency graphs to their equivalent DAG dependency code. || 
- 
+
+
 <h3> Topic 4: Airflow CLI </h3>
 
 <img width="919" alt="Screenshot 2025-02-17 at 00 23 56" src="https://github.com/user-attachments/assets/271dbc0f-dcfd-4abf-b20f-f071e80ac72a" />
@@ -80,6 +88,8 @@
 
 <h3> Topic 6: DAG Scheduling </h3>
 
+1. [Notes on Scheduling](https://github.com/ovimihai/airflow-cert-dag-authoring/blob/main/notes/1_the_basics.md)
+
 What is the default scheduler used in Airflow? Sequential Scheduler
  What happens if a task misses its scheduled execution time in Airflow?
 
@@ -96,6 +106,8 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 || Given a specific DAG scheduling goal (e.g., Schedule a DAG every day at 2 PM), identify the correct DAG scheduling parameter values to accomplish the goall ||
 || Given specific DAG scheduling parameter values, identify if a specific scheduling goal will be accomplished ||
 
+`schedule_interval=None`, which means it is not set to run automatically at any specific interval. Instead, it needs to be triggered manually for execution.
+
 <h3> Topic 7: DAG Runs </h3>
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
@@ -105,6 +117,8 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 <h3> Topic 8: Debugging </h3>
 
 <h3> Topic 9: XComs </h3>
+
+1. [Notes on XComs](https://github.com/ovimihai/airflow-cert-dag-authoring/blob/main/notes/3_taskflow_api.md)
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
@@ -123,7 +137,7 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 |10.1| Identify what a Transfer Operator does || 
 |10.2| Identify what a Sensor Operator does || 
 |10.3| Identify the purpose of the Airflow `PythonOperator` || 
-| | Other Operators |BranchPythonOperator | 
+| | Other Operators |BranchPythonOperator, TriggerDagRunOperator | 
 || Custom Operators | subcalss BaseOperator | 
 
 
@@ -145,7 +159,7 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 || Identify the mode to use in a DAG when the DAGs poke_interval parameter value is set to specific durationsl ||
 || Given the code for a sensor in a DAG, identify if the sensor is properly configured to accomplish a specific goal. ||
 
- ExternalTaskSensor
+ ExternalTaskSensor 
 
 <h3> Topic 15: Variables </h3>
 
@@ -177,6 +191,10 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 <h2> Code Snippets </h2>
 
 <h2> Miscellaneous </h2>
+
+
+
+ 
 
 
 
