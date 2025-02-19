@@ -127,10 +127,9 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
 || Identify the purpose of each XCom method: |</br>|
-|| `xcom push` |- When an XCom is pushed, it is stored in the Airflow metadata database and made available to all other tasks </br> - Any time a task returns a value, value is automatically pushed to XCom</br> <img width="602" alt="Screenshot 2025-02-19 at 02 37 43" src="https://github.com/user-attachments/assets/c807ff6c-7ef2-4b98-b676-96fc4145c7c6" />
-|
+|| `xcom push` |- When an XCom is pushed, it is stored in the Airflow metadata database and made available to all other tasks </br> - Any time a task returns a value, value is automatically pushed to XCom</br> <img width="602" alt="Screenshot 2025-02-19 at 02 37 43" src="https://github.com/user-attachments/assets/c807ff6c-7ef2-4b98-b676-96fc4145c7c6" />|
 || `xcom pull` |<img width="613" alt="Screenshot 2025-02-19 at 02 38 22" src="https://github.com/user-attachments/assets/43abcd1e-4c4c-49b3-8724-c6d4590b9609" />|
-|| Identify the limitations of using XComs |- method for passing data between Airflow tasks </br> - should be used to pass small amounts of data between tasks (metadata, dates, model accuracy, or single value) </br> - default size: (48 KB) </br> - When you use the standard XCom backend, the size-limit for an XCom is determined by your metadata database </br> - Postgres: 1 Gb / SQLite: 2 Gb / MySQL: 64 Kb</br> - alternatively use  intermediary data storage </br> - only certain types of data can be serialized</br> - JSON / pd.DataFrame / Delta Lake tables / Apache Iceberg </br> - other types => custom Xcom Backend|
+|| Identify the limitations of using XComs |- method for passing data between Airflow tasks </br> - should be used to pass small amounts of data between tasks (metadata, dates, model accuracy, or single value) </br> - default size limit for an XCom value is 48 KB when stored in the Airflow metadata database </br> - When you use the standard XCom backend, the size-limit for an XCom is determined by your metadata database </br> - Postgres: 1 Gb / SQLite: 2 Gb / MySQL: 64 Kb</br> - alternatively use  intermediary data storage </br> - only certain types of data can be serialized</br> - JSON / pd.DataFrame / Delta Lake tables / Apache Iceberg </br> - other types => custom Xcom Backend|
 
 <h3> Topic 10: Operators </h3>
 
