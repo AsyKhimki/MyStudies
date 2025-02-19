@@ -4,6 +4,7 @@
 
 1. [Apache-Airflow-Fundamentals-Study-Guide](https://www.astronomer.io/uploads/Apache-Airflow-Fundamentals-Study-Guide.pdf)
 2. [Sample exam questions](https://medium.com/@ansam.yousry/test-your-knowledge-70-questions-on-apache-airflow-fundamentals-8bcb9dda6127)
+3. [Tutorials](https://www.astronomer.io/docs/learn/category/tutorials)
 
 <h2> Curriculum </h2>
 
@@ -24,7 +25,7 @@
 |2.9|  Identify the default time zone of an Airflow instance|- The time zone is set in **airflow.cfg** </br> - By default it is set to UTC </br> - [Timezone](https://airflow.apache.org/docs/apache-airflow/stable/authoring-and-scheduling/timezone.html)| 
 |2.10| Identify the role of an executor in Airflow|| 
 |2.11| Identify the core architectural components of Airflow|| 
-|2.12| Identify the typical journey of a task|| 
+|2.12| Identify the typical journey of a task|**Miscellaneous** </br> - each task needs to be **idempotent**: If you execute the same DAGRun multiple times, you will get the same result| 
 |2.13| Identify what happens when two DAGs share the same `dag_id`| - When using the @dag decorator and not providing the `dag_id` parameter name, the function name is used as the dag_id </br> - When using the DAG class, this parameter is required </br> - [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/) </br> - If two DAG files define the same dag_id, the last one parsed by the scheduler will overwrite the previous one. </br> - If two separate DAG files share the same dag_id, tasks from one DAG might be interpreted as belonging to the other DAG.| 
 |2.14| Identify optional and non-optional DAG parameters. | [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/)| 
 |2.15| Identify what each of the task lifecycle stages does| <img width="500" alt="Screenshot 2025-02-16 at 22 51 17" src="https://github.com/user-attachments/assets/79c2baca-c752-4767-9a88-e53265cd2a85" />
@@ -43,7 +44,7 @@
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
 |3.1| Identify the purpose of task-level dependencies in Airflow|- **Upstream task:** A task that must reach a specified state before a dependent task can run. </br> - **Downstream task:** A dependent task that cannot run until an upstream task reaches a specified state. </br></br> **Miscellaneous**</br> - the tasks that are dependent on the output of other tasks through xcom variables require the preceding task to execute successfully first.</br></br>**Dynamic Task Mapping**</br> - DAGs that dynamically generate parallel tasks at runtime </br> - allows to create tasks based on the current runtime environment without having to change the DAG code </br> MapReduce model: DAG can create an arbitrary number of parallel tasks at runtime based on some input parameter (the map), and then if needed, have a single task downstream of your parallel mapped tasks that depends on their output (the reduce) </br> - can create dynamic tasks only if Airflow knows the parameters beforehand</br> - can't </br> - create tasks pased on other tasks output </br> - can create tasks based on a dictionary or a variable or even on some connection in the database</br></br> **Trigger Rules**</br> - `all_success: (default)` The task runs only when all upstream tasks have succeeded. </br> - `all_done`: The task runs once all upstream tasks are done with their execution (either succeeded or failed). </br> - `none_failed_min_one_success`: The task runs only when all upstream tasks have not failed or upstream_failed, and at least one upstream task has succeeded. </br></br> task-level dependencies define the execution order and relationships between tasks in a Directed Acyclic Graph (DAG). Their primary purposes include:</br> - **Ensuring Correct Execution Order**:Dependencies control when a task should run relative to others, ensuring that prerequisites are completed before execution.</br> - **Data Flow Management**: Dependencies help manage how data moves between tasks, ensuring that output from one task is available before the next task starts.</br> - **Handling Failures and Retries**: By enforcing dependencies, Airflow can handle failures more effectively, allowing downstream tasks to wait until upstream tasks succeed.</br> - **Parallelism and Concurrency Optimization**: Dependencies allow independent tasks to run in parallel, improving DAG execution efficiency.</br> - **Managing Conditional and Dynamic Workflows**: Airflow supports conditional branching and dynamic DAG generation using dependencies, enabling complex workflows.| 
-|3.2| Identify where DAG dependencies are set up in Airflow| `t0.set_downstream(t1)`</br>`t1.set_upstream(t0)`</br>`t0 >> t1` </br>`t1 << t0`</br><img width="271" alt="Screenshot 2025-02-18 at 00 54 18" src="https://github.com/user-attachments/assets/a64889c8-fba9-4420-8215-72cb4aa42f24" /> </br></br>**Dependency functions**</br> - utilities that let you set dependencies between several tasks or lists of tasks </br> - To set parallel dependencies between tasks and lists of tasks of the same length, use the `chain()`  <img width="454" alt="Screenshot 2025-02-18 at 00 57 44" src="https://github.com/user-attachments/assets/ff45ae6a-ae24-4c39-b775-edf13400216f" /> <img width="775" alt="Screenshot 2025-02-18 at 00 58 23" src="https://github.com/user-attachments/assets/3402c447-5b2d-4edf-bf8b-70142c57c9dc" /> - To set interconnected dependencies between tasks and lists of tasks: `chain_linear()`<img width="798" alt="Screenshot 2025-02-18 at 01 00 29" src="https://github.com/user-attachments/assets/b8dc93f6-8e24-448f-85e5-29d5d964e296" /> </br> - Dependencies for dynamically mapped tasks can be set in the same way as regular tasks. </br> - The dependencies between the task group and the start and end tasks are set within the DAG's context `(t0 >> tg1() >> t3)`|
+|3.2| Identify where DAG dependencies are set up in Airflow| `t0.set_downstream(t1)`</br>`t1.set_upstream(t0)`</br>`t0 >> t1` </br>`t1 << t0`</br><img width="271" alt="Screenshot 2025-02-18 at 00 54 18" src="https://github.com/user-attachments/assets/a64889c8-fba9-4420-8215-72cb4aa42f24" /> </br></br> **Important:** </br> - can't set dependencies between two lists. </br> `[t0, t1] >> [t2, t3]`=> Error  </br></br>**Dependency functions**</br> - utilities that let you set dependencies between several tasks or lists of tasks </br> - To set parallel dependencies between tasks and lists of tasks of the same length, use the `chain()`  <img width="454" alt="Screenshot 2025-02-18 at 00 57 44" src="https://github.com/user-attachments/assets/ff45ae6a-ae24-4c39-b775-edf13400216f" /> <img width="775" alt="Screenshot 2025-02-18 at 00 58 23" src="https://github.com/user-attachments/assets/3402c447-5b2d-4edf-bf8b-70142c57c9dc" /> - To set interconnected dependencies between tasks and lists of tasks: `chain_linear()`<img width="798" alt="Screenshot 2025-02-18 at 01 00 29" src="https://github.com/user-attachments/assets/b8dc93f6-8e24-448f-85e5-29d5d964e296" /> </br> - Dependencies for dynamically mapped tasks can be set in the same way as regular tasks. </br> - The dependencies between the task group and the start and end tasks are set within the DAG's context `(t0 >> tg1() >> t3)`|
 |3.3| Compare and contrast DAG task dependency relationships for equivalency|| 
 |3.4| Match DAG task dependency graphs to their equivalent DAG dependency code. || 
 
@@ -69,7 +70,9 @@
 
 <h3> Topic 5: Airflow UI </h3>
 
-[UI / Screenshots](https://airflow.apache.org/docs/apache-airflow/stable/ui.html)
+1. [UI / Screenshots](https://airflow.apache.org/docs/apache-airflow/stable/ui.html)
+2. [Debugging](https://www.astronomer.io/docs/learn/debugging-dags/)
+
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
@@ -119,47 +122,60 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 <h3> Topic 9: XComs </h3>
 
 1. [Notes on XComs](https://github.com/ovimihai/airflow-cert-dag-authoring/blob/main/notes/3_taskflow_api.md)
+2. [Passing Data Between Tasks](https://www.astronomer.io/docs/learn/airflow-passing-data-between-tasks/)
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
-|| Identify the purpose of each XCom method: ||
-|| `xcom push` ||
-|| `xcom pull` ||
-|| Identify the limitations of using XComs ||
+|| Identify the purpose of each XCom method: |</br>|
+|| `xcom push` |- When an XCom is pushed, it is stored in the Airflow metadata database and made available to all other tasks </br> - Any time a task returns a value, value is automatically pushed to XCom</br> <img width="602" alt="Screenshot 2025-02-19 at 02 37 43" src="https://github.com/user-attachments/assets/c807ff6c-7ef2-4b98-b676-96fc4145c7c6" />
+|
+|| `xcom pull` |<img width="613" alt="Screenshot 2025-02-19 at 02 38 22" src="https://github.com/user-attachments/assets/43abcd1e-4c4c-49b3-8724-c6d4590b9609" />|
+|| Identify the limitations of using XComs |- method for passing data between Airflow tasks </br> - should be used to pass small amounts of data between tasks (metadata, dates, model accuracy, or single value) </br> - default size: (48 KB) </br> - When you use the standard XCom backend, the size-limit for an XCom is determined by your metadata database </br> - Postgres: 1 Gb / SQLite: 2 Gb / MySQL: 64 Kb</br> - alternatively use  intermediary data storage </br> - only certain types of data can be serialized</br> - JSON / pd.DataFrame / Delta Lake tables / Apache Iceberg </br> - other types => custom Xcom Backend|
 
 <h3> Topic 10: Operators </h3>
 
 1. [Operators](https://airflow.apache.org/docs/apache-airflow/stable/core-concepts/operators.html)
 2. [Operators and Hooks](https://airflow.apache.org/docs/apache-airflow-providers/operators-and-hooks-ref/index.html)
+3. [List of available operators](https://registry.astronomer.io/modules?types=operators)
+4. [Anatomy of an operator](https://www.astronomer.io/events/webinars/anatomy-of-an-operator-video/)
+5. [Deferrable operators](https://www.astronomer.io/docs/learn/deferrable-operators/)
+6. [Branch Operator](https://www.astronomer.io/docs/learn/airflow-branch-operator/#taskbranch-branchpythonoperator)
+
+<img width="1033" alt="Screenshot 2025-02-19 at 01 56 09" src="https://github.com/user-attachments/assets/e6d61e13-52cb-40ea-81ce-6298b63d3f4c" />
+
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
 |10.1| Identify what a Transfer Operator does || 
 |10.2| Identify what a Sensor Operator does || 
 |10.3| Identify the purpose of the Airflow `PythonOperator` || 
-| | Other Operators |BranchPythonOperator, TriggerDagRunOperator | 
-|| Custom Operators | subcalss BaseOperator | 
+
+<h3> Topic 14: Sensors </h3>
+
+| | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
+|:------| :------ |:---- |
+|14.1| Identify the default timeout value of a sensor ||
+|14.2| Identify the mode to use in a DAG when the DAGs `poke_interval` parameter value is set to specific durationsl ||
+|14.3| Given the code for a sensor in a DAG, identify if the sensor is properly configured to accomplish a specific goal. ||
 
 
 <h3> Topic 11: Best Practices </h3>
 
 <h3> Topic 12: Connections </h3>
 
+**Reference**:
+1. [Connections](https://www.astronomer.io/docs/learn/connections/)
+2. [Secret Backends](https://airflow.apache.org/docs/apache-airflow/stable/security/secrets/secrets-backend/index.html)
+3. [Hooks](https://www.astronomer.io/docs/learn/what-is-a-hook/)
+4. [Managing Connections](https://airflow.apache.org/docs/apache-airflow/stable/howto/connection.html)
+5. [How Airflow finds connections](https://www.astronomer.io/docs/astro/manage-connections-variables/#how-airflow-finds-connections)
+
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
-|| Identify the different ways to create an Airflow connection ||
-||Identify the correct way to create an Airflow connection in a fil? ||
-|| Given a specific Airflow connection string, identify the connection ID ||
+|12.1| Identify the different ways to create an Airflow connection | - An Airflow connection is a set of configurations that send requests to the API of an external tool </br> - connection often requires login credentials or a private key to authenticate Airflow to the external tool </br> - Each connection has a unique `conn_id` |
+|12.2| Identify the correct way to create an Airflow connection in a file? |Airflow connections can be created: </br> - The Astro Environment Manager (recommended) </br> - Airflow UI </br> - Environment variables </br> - Airflow REST API </br> - A secrets backend (a system for managing secrets external to Airflow).</br> - airflow_settings.yaml file</br></br> **Airflow UI** </br> - Any parameters that don't have specific fields in the connection form can be defined in the Extra field </br></br> **Environment variables** </br> <img width="742" alt="Screenshot 2025-02-19 at 02 10 49" src="https://github.com/user-attachments/assets/8094bf9a-cd84-4e36-a317-c14ae7d7cb90" /></br> - Connections that are defined using environment variables do not appear in the list of available connections in the Airflow UI |
+|12.3| Given a specific Airflow connection string, identify the connection ID |Connection String</br>`<conn_type>://<login>:<password>@<host>:<port>/<schema>?<extra>`</br> Example </br> `postgres://user:pass@localhost:5432/mydb` </br> A connection string does not directly include the connection ID </br> CLI</br>`airflow connections list`|
 
-<h3> Topic 14: Sensors </h3>
-
-| | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
-|:------| :------ |:---- |
-|| Identify the default timeout value of a senso ||
-|| Identify the mode to use in a DAG when the DAGs poke_interval parameter value is set to specific durationsl ||
-|| Given the code for a sensor in a DAG, identify if the sensor is properly configured to accomplish a specific goal. ||
-
- ExternalTaskSensor 
 
 <h3> Topic 15: Variables </h3>
 
