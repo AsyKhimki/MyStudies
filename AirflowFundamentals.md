@@ -44,22 +44,24 @@
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
 |3.1| Identify the purpose of task-level dependencies in Airflow|- **Upstream task:** A task that must reach a specified state before a dependent task can run. </br> - **Downstream task:** A dependent task that cannot run until an upstream task reaches a specified state. </br></br> **Miscellaneous**</br> - the tasks that are dependent on the output of other tasks through xcom variables require the preceding task to execute successfully first.</br></br>**Dynamic Task Mapping**</br> - DAGs that dynamically generate parallel tasks at runtime </br> - allows to create tasks based on the current runtime environment without having to change the DAG code </br> MapReduce model: DAG can create an arbitrary number of parallel tasks at runtime based on some input parameter (the map), and then if needed, have a single task downstream of your parallel mapped tasks that depends on their output (the reduce) </br> - can create dynamic tasks only if Airflow knows the parameters beforehand</br> - can't </br> - create tasks pased on other tasks output </br> - can create tasks based on a dictionary or a variable or even on some connection in the database</br></br> **Trigger Rules**</br> - `all_success: (default)` The task runs only when all upstream tasks have succeeded. </br> - `all_done`: The task runs once all upstream tasks are done with their execution (either succeeded or failed). </br> - `none_failed_min_one_success`: The task runs only when all upstream tasks have not failed or upstream_failed, and at least one upstream task has succeeded. </br></br> task-level dependencies define the execution order and relationships between tasks in a Directed Acyclic Graph (DAG). Their primary purposes include:</br> - **Ensuring Correct Execution Order**:Dependencies control when a task should run relative to others, ensuring that prerequisites are completed before execution.</br> - **Data Flow Management**: Dependencies help manage how data moves between tasks, ensuring that output from one task is available before the next task starts.</br> - **Handling Failures and Retries**: By enforcing dependencies, Airflow can handle failures more effectively, allowing downstream tasks to wait until upstream tasks succeed.</br> - **Parallelism and Concurrency Optimization**: Dependencies allow independent tasks to run in parallel, improving DAG execution efficiency.</br> - **Managing Conditional and Dynamic Workflows**: Airflow supports conditional branching and dynamic DAG generation using dependencies, enabling complex workflows.| 
-|3.2| Identify where DAG dependencies are set up in Airflow| `t0.set_downstream(t1)`</br>`t1.set_upstream(t0)`</br>`t0 >> t1` </br>`t1 << t0`</br><img width="271" alt="Screenshot 2025-02-18 at 00 54 18" src="https://github.com/user-attachments/assets/a64889c8-fba9-4420-8215-72cb4aa42f24" /> </br></br> **Important:** </br> - can't set dependencies between two lists. </br> `[t0, t1] >> [t2, t3]`=> Error  </br></br>**Dependency functions**</br> - utilities that let you set dependencies between several tasks or lists of tasks </br> - To set parallel dependencies between tasks and lists of tasks of the same length, use the `chain()`  <img width="454" alt="Screenshot 2025-02-18 at 00 57 44" src="https://github.com/user-attachments/assets/ff45ae6a-ae24-4c39-b775-edf13400216f" /> <img width="775" alt="Screenshot 2025-02-18 at 00 58 23" src="https://github.com/user-attachments/assets/3402c447-5b2d-4edf-bf8b-70142c57c9dc" /> - To set interconnected dependencies between tasks and lists of tasks: `chain_linear()`<img width="798" alt="Screenshot 2025-02-18 at 01 00 29" src="https://github.com/user-attachments/assets/b8dc93f6-8e24-448f-85e5-29d5d964e296" /> </br> - Dependencies for dynamically mapped tasks can be set in the same way as regular tasks. </br> - The dependencies between the task group and the start and end tasks are set within the DAG's context `(t0 >> tg1() >> t3)`|
+|3.2| Identify where DAG dependencies are set up in Airflow| `t0.set_downstream(t1), t0.set_downstream([t1, t2])` - can define multiple dependencies</br>`t1.set_upstream(t0)`</br>`t0 >> t1` </br>`t1 << t0`</br><img width="271" alt="Screenshot 2025-02-18 at 00 54 18" src="https://github.com/user-attachments/assets/a64889c8-fba9-4420-8215-72cb4aa42f24" /> </br></br> **Important:** </br> - can't set dependencies between two lists. </br> `[t0, t1] >> [t2, t3]`=> Error  </br></br>**Dependency functions**</br> - utilities that let you set dependencies between several tasks or lists of tasks </br> - To set parallel dependencies between tasks and lists of tasks of the same length, use the `chain()`  <img width="454" alt="Screenshot 2025-02-18 at 00 57 44" src="https://github.com/user-attachments/assets/ff45ae6a-ae24-4c39-b775-edf13400216f" /> <img width="775" alt="Screenshot 2025-02-18 at 00 58 23" src="https://github.com/user-attachments/assets/3402c447-5b2d-4edf-bf8b-70142c57c9dc" /> - To set interconnected dependencies between tasks and lists of tasks: `chain_linear()`<img width="798" alt="Screenshot 2025-02-18 at 01 00 29" src="https://github.com/user-attachments/assets/b8dc93f6-8e24-448f-85e5-29d5d964e296" /> </br> - Dependencies for dynamically mapped tasks can be set in the same way as regular tasks. </br> - The dependencies between the task group and the start and end tasks are set within the DAG's context `(t0 >> tg1() >> t3)`|
 |3.3| Compare and contrast DAG task dependency relationships for equivalency|| 
 |3.4| Match DAG task dependency graphs to their equivalent DAG dependency code. || 
 
 
 <h3> Topic 4: Airflow CLI </h3>
 
-<img width="919" alt="Screenshot 2025-02-17 at 00 23 56" src="https://github.com/user-attachments/assets/271dbc0f-dcfd-4abf-b20f-f071e80ac72a" />
+1. [CLI reference](https://airflow.apache.org/docs/apache-airflow/stable/cli-and-env-variables-ref.html)
+
+<img width="629" alt="Screenshot 2025-02-20 at 00 53 34" src="https://github.com/user-attachments/assets/7dfa2430-c0c8-4612-abbb-8d030e8d26c5" />
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
 |4.1|Identify the purpose of specific Airflow CLI commands: ||
-|4.2| `airflow tasks test`||
-|4.3|`airflow db init`||
-|4.4|`airflow info`||
-|4.5| `airflow tasks test`||
+|4.2| `airflow info` ||
+|4.3|  `airflow config list`||
+|4.4| `airflow tasks test` ||
+|4.5| `airflow db init`||
 |4.6| `airflow config list`||
 |4.7| `airflow cheat sheet`||
 |4.8| `airflow variables`||
@@ -76,18 +78,18 @@
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
-|| Identify the most helpful Airflow UI view to use for real-world scenarios ||
-|| Grid view | - A bar chart and grid representation of the DAG that spans across time </br> - top row: a chart of DAG Runs by duration|
-|| Graph view | - Visualize your DAG’s dependencies and their current status for a specific run|
-|| Gantt view | - analyse task duration and overlap </br> - can quickly identify bottlenecks and where the bulk of the time is spent for specific DAG runs|
-|| DAGs view | - List of the DAGs in your environment </br> - a set of shortcuts to useful pages </br> - can see exactly how many tasks succeeded, failed, or are currently running at a glance|
-|| Landing times view | - The landing time for a task instance is the delta between the dag run’s data interval end (typically this means when the dag “should” run) and the dag run completion time.|
-|| Tree view ||
-|| Calendar view | -  an overview of your entire DAG’s history over months or even years|
-|| Identify the default time for DAGs to appear in the Airflow UI | The time it takes for a DAG to show up depends on the scheduler's DAG parsing interval. </br> **Key Configuration Parameters Affecting DAG Visibility** </br> - `dag_dir_list_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - controls how often Airflow scans the `dags_folder` for new DAG files.</br>&nbsp;&nbsp; - If a new DAG is added, it will be detected within 30 seconds by default.</br> - `min_file_process_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - how often each DAG file is reprocessed.</br>&nbsp;&nbsp; - how quickly updates to DAGs are reflected in the UI.</br> - `scheduler_heartbeat_sec` (Default: 5 seconds)</br>&nbsp;&nbsp; - Determines how often the scheduler checks for changes in DAGs.|
-|| Identify the result of deleting a DAG using the Airflow UI ||
-|| Identify the purpose of core Airflow UI components (e.g., The Last Run Column ||
-|| Given a specific Airflow UI, identify solutions to common issues.  ||
+|5.1| Identify the most helpful Airflow UI view to use for real-world scenarios ||
+|5.2| Grid view | - A bar chart and grid representation of the DAG that spans across time </br> - top row: a chart of DAG Runs by duration|
+|5.3| Graph view | - Visualize your DAG’s dependencies and their current status for a specific run|
+|5.4| Gantt view | - analyse task duration and overlap </br> - can quickly identify bottlenecks and where the bulk of the time is spent for specific DAG runs|
+|5.5| DAGs view | - List of the DAGs in your environment </br> - a set of shortcuts to useful pages </br> - can see exactly how many tasks succeeded, failed, or are currently running at a glance|
+|5.6| Landing times view | - The landing time for a task instance is the delta between the dag run’s data interval end (typically this means when the dag “should” run) and the dag run completion time.|
+|5.7| Tree view ||
+|5.8| Calendar view | -  an overview of your entire DAG’s history over months or even years|
+|5.9| Identify the default time for DAGs to appear in the Airflow UI | The time it takes for a DAG to show up depends on the scheduler's DAG parsing interval. </br> **Key Configuration Parameters Affecting DAG Visibility** </br> - `dag_dir_list_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - controls how often Airflow scans the `dags_folder` for new DAG files.</br>&nbsp;&nbsp; - If a new DAG is added, it will be detected within 30 seconds by default.</br> - `min_file_process_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - how often each DAG file is reprocessed.</br>&nbsp;&nbsp; - how quickly updates to DAGs are reflected in the UI.</br> - `scheduler_heartbeat_sec` (Default: 5 seconds)</br>&nbsp;&nbsp; - Determines how often the scheduler checks for changes in DAGs.|
+|5.10| Identify the result of deleting a DAG using the Airflow UI ||
+|5.11| Identify the purpose of core Airflow UI components (e.g., The Last Run Column ||
+|5.12| Given a specific Airflow UI, identify solutions to common issues.  ||
 
 <h3> Topic 6: DAG Scheduling </h3>
 
@@ -126,10 +128,10 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
-|| Identify the purpose of each XCom method: |</br>|
-|| `xcom push` |- When an XCom is pushed, it is stored in the Airflow metadata database and made available to all other tasks </br> - Any time a task returns a value, value is automatically pushed to XCom</br> <img width="602" alt="Screenshot 2025-02-19 at 02 37 43" src="https://github.com/user-attachments/assets/c807ff6c-7ef2-4b98-b676-96fc4145c7c6" />|
-|| `xcom pull` |<img width="613" alt="Screenshot 2025-02-19 at 02 38 22" src="https://github.com/user-attachments/assets/43abcd1e-4c4c-49b3-8724-c6d4590b9609" />|
-|| Identify the limitations of using XComs |- method for passing data between Airflow tasks </br> - should be used to pass small amounts of data between tasks (metadata, dates, model accuracy, or single value) </br> - default size limit for an XCom value is 48 KB when stored in the Airflow metadata database </br> - When you use the standard XCom backend, the size-limit for an XCom is determined by your metadata database </br> - Postgres: 1 Gb / SQLite: 2 Gb / MySQL: 64 Kb</br> - alternatively use  intermediary data storage </br> - only certain types of data can be serialized</br> - JSON / pd.DataFrame / Delta Lake tables / Apache Iceberg </br> - other types => custom Xcom Backend|
+|9.1| Identify the purpose of each XCom method: |</br>|
+|9.2| `xcom push` |- When an XCom is pushed, it is stored in the Airflow metadata database and made available to all other tasks </br> - Any time a task returns a value, value is automatically pushed to XCom (key `return_value`)</br> <img width="602" alt="Screenshot 2025-02-19 at 02 37 43" src="https://github.com/user-attachments/assets/c807ff6c-7ef2-4b98-b676-96fc4145c7c6" />|
+|9.3| `xcom pull` |<img width="613" alt="Screenshot 2025-02-19 at 02 38 22" src="https://github.com/user-attachments/assets/43abcd1e-4c4c-49b3-8724-c6d4590b9609" />|
+|9.4| Identify the limitations of using XComs |- method for passing data between Airflow tasks </br> - should be used to pass small amounts of data between tasks (metadata, dates, model accuracy, or single value) </br> - default size limit for an XCom value is 48 KB when stored in the Airflow metadata database </br> - When you use the standard XCom backend, the size-limit for an XCom is determined by your metadata database </br> - Postgres: 1 Gb / SQLite: 2 Gb / MySQL: 64 Kb</br> - alternatively use  intermediary data storage </br> - only certain types of data can be serialized</br> - JSON / pd.DataFrame / Delta Lake tables / Apache Iceberg </br> - other types => custom Xcom Backend|
 
 <h3> Topic 10: Operators </h3>
 
@@ -147,7 +149,7 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 |:------| :------ |:---- |
 |10.1| Identify what a Transfer Operator does || 
 |10.2| Identify what a Sensor Operator does || 
-|10.3| Identify the purpose of the Airflow `PythonOperator` || 
+|10.3| Identify the purpose of the Airflow `PythonOperator` | - In Python operator to pass parameters to a python function use `op_args` and `op_kwargs` parameters| 
 
 <h3> Topic 14: Sensors </h3>
 
@@ -189,6 +191,17 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 |15.5| Given a specific variable name, Identify if a variable will be visible in the Airflow UI || 
 
 <h2> Additional Topics </h2>
+
+1. [Configuration / Depends on the Past](https://github.com/ovimihai/airflow-cert-dag-authoring/blob/main/notes/4_advanced_concepts.md)
+2. [Configuration](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html)
+
+**Notes**
+1. Default port: **8080**
+2. The `depends_on_past` parameter in Apache Airflow is a task-level setting that ensures a task only runs if the previous run of the same task has completed successfully.
+3. Use case: incremental data processing
+4. If tasks already have explicit dependencies (task1 >> task2), you don’t need depends_on_past=True unless each run relies on past executions.
+ 
+
 
 | | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
 |:------| :------ |:---- |
