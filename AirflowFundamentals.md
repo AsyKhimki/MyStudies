@@ -27,7 +27,7 @@
 |2.11| Identify the core architectural components of Airflow|| 
 |2.12| Identify the typical journey of a task|**Miscellaneous** </br> - each task needs to be **idempotent**: If you execute the same DAGRun multiple times, you will get the same result| 
 |2.13| Identify what happens when two DAGs share the same `dag_id`| - When using the @dag decorator and not providing the `dag_id` parameter name, the function name is used as the dag_id </br> - When using the DAG class, this parameter is required </br> - [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/) </br> - If two DAG files define the same dag_id, the last one parsed by the scheduler will overwrite the previous one. </br> - If two separate DAG files share the same dag_id, tasks from one DAG might be interpreted as belonging to the other DAG.| 
-|2.14| Identify optional and non-optional DAG parameters. | [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/)| 
+|2.14| Identify optional and non-optional DAG parameters. | [Airflow Dag Parameters](https://www.astronomer.io/docs/learn/airflow-dag-parameters/)</br></br> **Traditional syntax**</br> - `dag_id`: A unique identifier for the DAG.</br> - `start_date`: The datetime when the DAG should start running.</br> - `schedule_interval` is **optional** (if not provided, the DAG will not run on a schedule) </br></br>**TaskFlow API**</br> - `start_date` </br> - The `dag_id` is not required explicitly because it is inferred from the function name| 
 |2.15| Identify what each of the task lifecycle stages does| <img width="500" alt="Screenshot 2025-02-16 at 22 51 17" src="https://github.com/user-attachments/assets/79c2baca-c752-4767-9a88-e53265cd2a85" />
 |2.16| Identify valid ways to define a DAG in Airflow.| - TaskFlow API </br> - Traditional syntax </br> NB: can be mixed | 
 || Miscellaneous| - Airflow does not provide versioning features </br> - Airflow can be used for data orchestration in multi-cloud environments. </br> - Airflow is primarily designed for batch processing | 
@@ -87,7 +87,7 @@
 |5.7| Tree view ||
 |5.8| Calendar view | -  an overview of your entire DAG’s history over months or even years|
 |5.9| Identify the default time for DAGs to appear in the Airflow UI | The time it takes for a DAG to show up depends on the scheduler's DAG parsing interval. </br> **Key Configuration Parameters Affecting DAG Visibility** </br> - `dag_dir_list_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - controls how often Airflow scans the `dags_folder` for new DAG files.</br>&nbsp;&nbsp; - If a new DAG is added, it will be detected within 30 seconds by default.</br> - `min_file_process_interval` (Default: 30 seconds)</br>&nbsp;&nbsp; - how often each DAG file is reprocessed.</br>&nbsp;&nbsp; - how quickly updates to DAGs are reflected in the UI.</br> - `scheduler_heartbeat_sec` (Default: 5 seconds)</br>&nbsp;&nbsp; - Determines how often the scheduler checks for changes in DAGs.|
-|5.10| Identify the result of deleting a DAG using the Airflow UI ||
+|5.10| Identify the result of deleting a DAG using the Airflow UI |- DAG is removed from the UI. </br> - Metadata for DAG (including task instances and runs) is deleted.</br> - DAG file is not deleted from the filesystem (you must delete it manually if desired).</br> - Task instances and logs may still exist in external storage (logs will not be deleted).</br> - Active DAG runs may continue running until completion, but no new runs will be triggered.</br> - Cannot undo the deletion directly; to restore the DAG, you need to put the code back into the DAGs folder.|
 |5.11| Identify the purpose of core Airflow UI components (e.g., The Last Run Column ||
 |5.12| Given a specific Airflow UI, identify solutions to common issues.  ||
 
@@ -175,7 +175,7 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 |:------| :------ |:---- |
 |12.1| Identify the different ways to create an Airflow connection | - An Airflow connection is a set of configurations that send requests to the API of an external tool </br> - connection often requires login credentials or a private key to authenticate Airflow to the external tool </br> - Each connection has a unique `conn_id` |
 |12.2| Identify the correct way to create an Airflow connection in a file? |Airflow connections can be created: </br> - The Astro Environment Manager (recommended) </br> - Airflow UI </br> - Environment variables </br> - Airflow REST API </br> - A secrets backend (a system for managing secrets external to Airflow).</br> - airflow_settings.yaml file</br></br> **Airflow UI** </br> - Any parameters that don't have specific fields in the connection form can be defined in the Extra field </br></br> **Environment variables** </br> <img width="742" alt="Screenshot 2025-02-19 at 02 10 49" src="https://github.com/user-attachments/assets/8094bf9a-cd84-4e36-a317-c14ae7d7cb90" /></br> - Connections that are defined using environment variables do not appear in the list of available connections in the Airflow UI |
-|12.3| Given a specific Airflow connection string, identify the connection ID |Connection String</br>`<conn_type>://<login>:<password>@<host>:<port>/<schema>?<extra>`</br> Example </br> `postgres://user:pass@localhost:5432/mydb` </br> A connection string does not directly include the connection ID </br> CLI</br>`airflow connections list`|
+|12.3| Given a specific Airflow connection string, identify the connection ID |Connection String</br>`<conn_type>://<login>:<password>@<host>:<port>/<schema>?<extra>`</br> Example </br> `postgres://user:pass@localhost:5432/mydb` </br> A connection string does not directly include the connection ID </br> CLI</br>`airflow connections list`</br></br> Definition in Environmental Vars </br> `AIRFLOW_CONN_SNOWFLAKE_CONN='snowflake://LOGIN:PASSWORD@/?account=xy12345&region=eu-central-1'`</br> Connecion id is `SNOWFLAKE_CONN`|
 
 
 <h3> Topic 15: Variables </h3>
@@ -202,17 +202,6 @@ What is the default scheduler used in Airflow? Sequential Scheduler
 4. If tasks already have explicit dependencies (task1 >> task2), you don’t need depends_on_past=True unless each run relies on past executions.
  
 
-
-| | Topic| Notes &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;|
-|:------| :------ |:---- |
-|Task instance parameters| trigger_rule |"all_failed"| 
-||"depends_on_past"||
-| default_args parameter |||
-||Airflow environment variables|[Configuration References](https://airflow.apache.org/docs/apache-airflow/stable/configurations-ref.html)</br>- AIRFLOW_HOME |
-|| concurrency parameter in airflow.cfg||
-|| SMTP setting||
-| Parameters |||
-||  Celery Executor:||||
 
 <h2> Case Studies </h2>
 
